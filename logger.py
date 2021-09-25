@@ -21,7 +21,7 @@ def logs():
                 sleep(1)
 
 def printLogs():
-    
+    pass
 
 
 @APP.route("/stream", methods=["GET"])
