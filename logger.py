@@ -1,11 +1,10 @@
 from flask import Flask, render_template,Response,request,jsonify,stream_with_context
 from time import sleep
 import requests
+import os
 
 APP = Flask(__name__,static_folder="app/static/",template_folder="app/static/")
-DATA= {}
-
-
+path_to_file = 'job.log'
 
 @APP.route("/", methods=["GET"])
 def root():
@@ -15,20 +14,16 @@ def root():
 @APP.route("/feeder", methods = ['POST'])
 def feed():
     if request.method == 'POST':
-       with open('job.log','a') as a:
+        with open(path_to_file,'a') as a:
            a.write(str((request.json[0]['log']))+"\n")
     return "OK"
 
 def logs():
-    with open("job.log", "r") as f:
+    if os.path.exists(path_to_file):
+        with open("job.log", "r") as f:
             while True:
                 yield f.read()
                 sleep(1)
-
-def printLogs(msg=DATA):
-    while True:
-        yield str(msg)
-        sleep(1)
 
 
 @APP.route("/stream", methods=["GET"])
